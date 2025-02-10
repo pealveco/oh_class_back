@@ -6,6 +6,7 @@ import com.pragma.tecnologia.domain.exceptions.BusinessException;
 import com.pragma.tecnologia.domain.model.Tecnologia;
 import com.pragma.tecnologia.domain.spi.TecnologiaPersistencePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -25,6 +26,12 @@ public class TecnologiaUseCase implements TecnologiaServicePort {
     @Override
     public Flux<Tecnologia> getAllTecnologias() {
         return tecnologiaPersistencePort.findAll()
+                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.NO_DATA_FOUND)));
+    }
+
+    @Override
+    public Flux<Tecnologia> getAllTecnologias(Pageable pageable) {
+        return tecnologiaPersistencePort.findAll(pageable)
                 .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.NO_DATA_FOUND)));
     }
 

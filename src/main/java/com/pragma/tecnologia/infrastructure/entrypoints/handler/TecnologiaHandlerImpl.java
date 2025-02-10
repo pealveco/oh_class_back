@@ -11,6 +11,9 @@ import com.pragma.tecnologia.infrastructure.entrypoints.util.APIResponse;
 import com.pragma.tecnologia.infrastructure.entrypoints.util.ErrorDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -78,8 +81,27 @@ public class TecnologiaHandlerImpl {
                 });
     }
 
+//    public Mono<ServerResponse> getAllTecnologias(ServerRequest request) {
+//        return ServerResponse.ok().body(tecnologiaServicePort.getAllTecnologias(), TecnologiaDTO.class);
+//    }
+
     public Mono<ServerResponse> getAllTecnologias(ServerRequest request) {
-        return ServerResponse.ok().body(tecnologiaServicePort.getAllTecnologias(), TecnologiaDTO.class);
+        int page = Integer.parseInt(request.queryParam("page").orElse("0"));
+        int size = Integer.parseInt(request.queryParam("size").orElse("10"));
+        String sort = request.queryParam("sort").orElse("asc");
+
+        Sort.Direction direction = sort.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, "name"));
+
+        return ServerResponse.ok().body(
+            tecnologiaServicePort.getAllTecnologias(pageable)
+                .map(tecnologia -> {
+                    TecnologiaDTO dto = tecnologiaMapper.tecnologiaToTecnologiaDTO(tecnologia);
+                    dto = new TecnologiaDTO(tecnologia.id(), dto.name(), dto.description());
+                    return dto;
+                }),
+            TecnologiaDTO.class
+        );
     }
 
     public Mono<ServerResponse> getTecnologiaById(ServerRequest request) {

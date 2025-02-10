@@ -5,6 +5,7 @@ import com.pragma.tecnologia.domain.spi.TecnologiaPersistencePort;
 import com.pragma.tecnologia.infrastructure.adapters.persistenceadapter.mapper.TecnologiaEntityMapper;
 import com.pragma.tecnologia.infrastructure.adapters.persistenceadapter.repository.TecnologiaRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -22,6 +23,12 @@ public class TecnologiaPersistenceAdapter implements TecnologiaPersistencePort {
     @Override
     public Flux<Tecnologia> findAll() {
         return tecnologiaRepository.findAll()
+                .map(tecnologiaEntityMapper::toModel);
+    }
+
+    @Override
+    public Flux<Tecnologia> findAll(Pageable pageable) {
+        return tecnologiaRepository.findAllBy(pageable)
                 .map(tecnologiaEntityMapper::toModel);
     }
 
