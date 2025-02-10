@@ -44,7 +44,7 @@ public class TecnologiaHandlerImpl {
                 })
                 .flatMap(savedTecnologia -> ServerResponse
                         .status(HttpStatus.CREATED)
-                        .bodyValue("Tecnologia created successfully"))
+                        .bodyValue(savedTecnologia))
                 .contextWrite(Context.of(X_MESSAGE_ID, messageId))
                 .doOnError(ex -> log.error("Error creating tecnologia", ex))
                 .onErrorResume(BusinessException.class, ex -> buildErrorResponse(
@@ -140,7 +140,7 @@ public class TecnologiaHandlerImpl {
                                     return tecnologiaServicePort.updateTecnologia(updatedTecnologia);
                                 });
                     })
-                    .flatMap(updatedTecnologia -> ServerResponse.ok().bodyValue("Tecnologia updated successfully"))
+                    .flatMap(updatedTecnologia -> ServerResponse.ok().bodyValue(updatedTecnologia))
                     .onErrorResume(e -> {
                         if (e instanceof BusinessException) {
                             return buildErrorResponse(HttpStatus.BAD_REQUEST, getMessageId(request), ((BusinessException) e).getTechnicalMessage(), null);
