@@ -1,15 +1,14 @@
 package com.pragma.tecnologia.infrastructure.entrypoints.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class TecnologiaDTO {
+public record TecnologiaDTO(
+        @NotBlank(message = "El nombre no puede estar vacío")
+        @Size(max = 50, message = "El nombre no puede superar los 50 caracteres")
+        String name,
 
-    private Long id;
-    private String name;
-    private String descripcion;
-}
+        @NotBlank(message = "La descripción no puede estar vacía")
+        @Size(max = 90, message = "La descripción no puede superar los 90 caracteres")
+        String description
+) {}

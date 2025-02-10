@@ -6,7 +6,6 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface TecnologiaMapper {
-
     Tecnologia tecnologiaDTOToTecnologia(TecnologiaDTO tecnologiaDTO);
     TecnologiaDTO tecnologiaToTecnologiaDTO(Tecnologia tecnologia);
 }

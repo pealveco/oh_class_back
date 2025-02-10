@@ -1,14 +1,5 @@
 package com.pragma.tecnologia.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Tecnologia {
-        private Long id;
-        private String name;
-        private String description;
+public record Tecnologia(Long id, String name, String description) {
 }

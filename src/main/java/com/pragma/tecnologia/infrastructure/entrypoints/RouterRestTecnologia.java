@@ -13,10 +13,10 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class RouterRestTecnologia {
     @Bean
     public RouterFunction<ServerResponse> routerFunctionTecnologia(TecnologiaHandlerImpl tecnologiaHandler) {
-        return route(POST("/tecnologia"), tecnologiaHandler::createTecnologia);
-//                .andRoute(GET("/tecnologia"), tecnologiaHandler::getAllTecnologias)
-//                .andRoute(GET("/tecnologia/{id}"), tecnologiaHandler::getTecnologiaById)
-//                .andRoute(DELETE("/tecnologia/{id}"), tecnologiaHandler::deleteTecnologia)
-//                .andRoute(PUT("/tecnologia/{id}"), tecnologiaHandler::updateTecnologia);
+        return route(POST("/tecnologia"), tecnologiaHandler::createTecnologia)
+                .andRoute(GET("/tecnologia"), tecnologiaHandler::getAllTecnologias)
+                .andRoute(GET("/tecnologia/{id}"), tecnologiaHandler::getTecnologiaById)
+                .andRoute(DELETE("/tecnologia/{id}"), tecnologiaHandler::deleteTecnologia)
+                .andRoute(PUT("/tecnologia/{id}"), tecnologiaHandler::updateTecnologia);
     }
 }

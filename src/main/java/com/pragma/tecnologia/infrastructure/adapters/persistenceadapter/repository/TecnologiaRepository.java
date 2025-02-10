@@ -1,9 +1,11 @@
-package com.pragma.tecnologia.infrastructure.repository;
+package com.pragma.tecnologia.infrastructure.adapters.persistenceadapter.repository;
 
 import com.pragma.tecnologia.infrastructure.adapters.persistenceadapter.entity.TecnologiaEntity;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-import reactor.core.publisher.Mono;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 
+@Repository
 public interface TecnologiaRepository extends ReactiveCrudRepository<TecnologiaEntity, Long> {
-    Mono<Boolean> existsByName(String name);
+    Flux<TecnologiaEntity> findByName(String name);
 }

@@ -2,9 +2,9 @@ package com.pragma.tecnologia.application.config;
 
 import com.pragma.tecnologia.domain.spi.TecnologiaPersistencePort;
 import com.pragma.tecnologia.domain.usecase.TecnologiaUseCase;
-import com.pragma.tecnologia.infrastructure.adapters.tecnologiaadapter.TecnologiaAdapter;
+import com.pragma.tecnologia.infrastructure.adapters.persistenceadapter.TecnologiaPersistenceAdapter;
 import com.pragma.tecnologia.infrastructure.adapters.persistenceadapter.mapper.TecnologiaEntityMapper;
-import com.pragma.tecnologia.infrastructure.repository.TecnologiaRepository;
+import com.pragma.tecnologia.infrastructure.adapters.persistenceadapter.repository.TecnologiaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,11 +36,11 @@ public class UseCasesConfig {
 
         @Bean
         public TecnologiaPersistencePort tecnologiaPersistencePort() {
-                return new TecnologiaAdapter(tecnologiaRepository, tecnologiaEntityMapper);
+                return new TecnologiaPersistenceAdapter(tecnologiaRepository, tecnologiaEntityMapper);
         }
 
         @Bean
         public TecnologiaUseCase tecnologiaUseCase(TecnologiaPersistencePort tecnologiaPersistencePort) {
-                return new TecnologiaUseCase(tecnologiaPersistencePort, tecnologiaEntityMapper);
+                return new TecnologiaUseCase(tecnologiaPersistencePort);
         }
 }

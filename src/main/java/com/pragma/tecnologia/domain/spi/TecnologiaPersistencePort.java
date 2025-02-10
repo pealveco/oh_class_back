@@ -1,4 +1,3 @@
-// TecnologiaPersistencePort.java
 package com.pragma.tecnologia.domain.spi;
 
 import com.pragma.tecnologia.domain.model.Tecnologia;
