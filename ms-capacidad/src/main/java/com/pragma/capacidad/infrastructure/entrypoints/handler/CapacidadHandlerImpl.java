@@ -78,24 +78,11 @@ public class CapacidadHandlerImpl {
                     capacidades.sort((c1, c2) -> {
                         int size1 = c1.tecnologiaIds().size();
                         int size2 = c2.tecnologiaIds().size();
-                        int comparison = Integer.compare(size1, size2);
-                        if (comparison == 0) {
-                            comparison = c1.id().compareTo(c2.id());
-                        }
-                        return direction.isAscending() ? comparison : -comparison;
-                    });
-                } else {
-                    capacidades.sort((c1, c2) -> {
-                        int comparison = c1.name().compareTo(c2.name());
-                        if (comparison == 0) {
-                            comparison = c1.id().compareTo(c2.id());
-                        }
-                        return direction.isAscending() ? comparison : -comparison;
+                        return direction.isAscending() ? Integer.compare(size1, size2) : Integer.compare(size2, size1);
                     });
                 }
                 return Flux.fromIterable(capacidades)
                     .flatMap(capacidad -> fetchTecnologiasByIds(capacidad.tecnologiaIds())
-                        .map(tecnologia -> new TecnologiaDTO(tecnologia.id(), tecnologia.name(), null))
                         .collectList()
                         .map(tecnologias -> {
                             CapacidadDTO dto = capacidadMapper.capacidadToCapacidadDTO(capacidad);
@@ -104,7 +91,7 @@ public class CapacidadHandlerImpl {
                                 dto.name(),
                                 dto.description(),
                                 tecnologias.stream()
-                                    .map(TecnologiaDTO::id)
+                                    .map(Tecnologia::id)
                                     .collect(Collectors.toSet())
                             );
                             return dto;
