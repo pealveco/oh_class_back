@@ -1,7 +1,6 @@
-package com.pragma.tecnologia.infrastructure.entrypoints.util;
+package com.pragma.capacidad.infrastructure.entrypoints.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.pragma.tecnologia.infrastructure.entrypoints.dto.TecnologiaDTO;
 import lombok.*;
 
 import java.util.List;
@@ -17,6 +16,5 @@ public class APIResponse {
     private String message;
     private String identifier;
     private String date;
-    private TecnologiaDTO data;
     private List<ErrorDTO> errors;
 }

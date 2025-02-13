@@ -1,4 +1,4 @@
-package com.pragma.tecnologia.domain.enums;
+package com.pragma.capacidad.domain.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public enum TechnicalMessage {
     ADAPTER_RESPONSE_NOT_FOUND("404-0", "invalid email, please verify", ""),
     USER_ALREADY_EXISTS("400","El usuario ya está registrado." ,"" ),
     TECNOLOGIA_ALREADY_EXISTS("400", "La Tecnologia ya existe." ,"" ),
-    INVALID_TECNOLOGIA("400", "La Tecnologia es invalida.", "tecnologia"),
+    INVALID_TECNOLOGIA("400", "La Tecnologia es invalida.", "com/pragma/capacidad"),
     TECNOLOGIA_CREATED("201", "Tecnologia created successfully", ""),
     INVALID_TECHNOLOGY_NAME("400", "Invalid Technology Name", "name"),
     NO_DATA_FOUND("404", "No data found", ""),
