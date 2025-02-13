@@ -4,6 +4,10 @@ import com.pragma.capacidad.domain.api.CapacidadServicePort;
 import com.pragma.capacidad.domain.model.Capacidad;
 import com.pragma.capacidad.infrastructure.entrypoints.dto.CapacidadDTO;
 import com.pragma.capacidad.infrastructure.entrypoints.mapper.CapacidadMapper;
+import com.pragma.tecnologia.domain.api.TecnologiaServicePort;
+import com.pragma.tecnologia.domain.model.Tecnologia;
+import com.pragma.tecnologia.infrastructure.entrypoints.dto.TecnologiaDTO;
+import com.pragma.tecnologia.infrastructure.entrypoints.mapper.TecnologiaMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -13,9 +17,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -24,6 +31,8 @@ public class CapacidadHandlerImpl {
 
     private final CapacidadServicePort capacidadServicePort;
     private final CapacidadMapper capacidadMapper;
+//    private final TecnologiaMapper tecnologiaMapper;
+    private final TecnologiaServicePort tecnologiaServicePort;
 
     public Mono<ServerResponse> createCapacidad(ServerRequest request) {
         return request.bodyToMono(CapacidadDTO.class)
@@ -60,20 +69,53 @@ public class CapacidadHandlerImpl {
         String sortBy = request.queryParam("sortBy").orElse("name");
 
         Sort.Direction direction = sort.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        Pageable pageable = PageRequest.of(page, size);
 
-        return ServerResponse.ok().body(
-                capacidadServicePort.getAllCapacidades(pageable)
-                        .map(capacidad -> {
+        return capacidadServicePort.getAllCapacidades(pageable)
+            .collectList()
+            .flatMap(capacidades -> {
+                if ("tecnologiaCount".equals(sortBy)) {
+                    capacidades.sort((c1, c2) -> {
+                        int size1 = c1.tecnologiaIds().size();
+                        int size2 = c2.tecnologiaIds().size();
+                        int comparison = Integer.compare(size1, size2);
+                        if (comparison == 0) {
+                            comparison = c1.id().compareTo(c2.id());
+                        }
+                        return direction.isAscending() ? comparison : -comparison;
+                    });
+                } else {
+                    capacidades.sort((c1, c2) -> {
+                        int comparison = c1.name().compareTo(c2.name());
+                        if (comparison == 0) {
+                            comparison = c1.id().compareTo(c2.id());
+                        }
+                        return direction.isAscending() ? comparison : -comparison;
+                    });
+                }
+                return Flux.fromIterable(capacidades)
+                    .flatMap(capacidad -> fetchTecnologiasByIds(capacidad.tecnologiaIds())
+                        .map(tecnologia -> new TecnologiaDTO(tecnologia.id(), tecnologia.name(), null))
+                        .collectList()
+                        .map(tecnologias -> {
                             CapacidadDTO dto = capacidadMapper.capacidadToCapacidadDTO(capacidad);
                             dto = new CapacidadDTO(
-                                    capacidad.id(),
-                                    dto.name(),
-                                    dto.description(),
-                                    capacidad.tecnologiaIds() != null ? capacidad.tecnologiaIds() : new HashSet<>());
+                                capacidad.id(),
+                                dto.name(),
+                                dto.description(),
+                                tecnologias.stream()
+                                    .map(TecnologiaDTO::id)
+                                    .collect(Collectors.toSet())
+                            );
                             return dto;
-                        }),
-                CapacidadDTO.class
-        );
+                        }))
+                    .collectList();
+            })
+            .flatMap(capacidadDTOs -> ServerResponse.ok().bodyValue(capacidadDTOs));
+    }
+
+    private Flux<Tecnologia> fetchTecnologiasByIds(Set<Long> ids) {
+        return Flux.fromIterable(ids)
+            .flatMap(tecnologiaServicePort::getTecnologiaById);
     }
 }

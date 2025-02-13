@@ -6,11 +6,13 @@ import com.pragma.tecnologia.domain.exceptions.BusinessException;
 import com.pragma.tecnologia.domain.model.Tecnologia;
 import com.pragma.tecnologia.domain.spi.TecnologiaPersistencePort;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
+@Slf4j
 public class TecnologiaUseCase implements TecnologiaServicePort {
 
     private final TecnologiaPersistencePort tecnologiaPersistencePort;
@@ -37,7 +39,10 @@ public class TecnologiaUseCase implements TecnologiaServicePort {
 
     @Override
     public Mono<Tecnologia> getTecnologiaById(Long id) {
+        log.info("Buscando tecnología con ID: {}", id);
+
         return tecnologiaPersistencePort.findById(id)
+                .doOnNext(tecnologia -> log.info("Tecnología encontrada: {}", tecnologia))
                 .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.INVALID_MESSAGE_ID)));
     }
 

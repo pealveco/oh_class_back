@@ -11,13 +11,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class UseCasesConfig {
+public class TecnologiaUseCasesConfig {
 
         private final TecnologiaRepository tecnologiaRepository;
         private final TecnologiaEntityMapper tecnologiaEntityMapper;
 
 
-        @Bean
+        @Bean(name = "uniqueTecnologiaUseCasesConfig")
         public TecnologiaPersistencePort tecnologiaPersistencePort() {
                 return new TecnologiaPersistenceAdapter(tecnologiaRepository, tecnologiaEntityMapper);
         }
