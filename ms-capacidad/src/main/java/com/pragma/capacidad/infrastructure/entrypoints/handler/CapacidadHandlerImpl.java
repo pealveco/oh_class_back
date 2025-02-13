@@ -6,8 +6,6 @@ import com.pragma.capacidad.infrastructure.entrypoints.dto.CapacidadDTO;
 import com.pragma.capacidad.infrastructure.entrypoints.mapper.CapacidadMapper;
 import com.pragma.tecnologia.domain.api.TecnologiaServicePort;
 import com.pragma.tecnologia.domain.model.Tecnologia;
-import com.pragma.tecnologia.infrastructure.entrypoints.dto.TecnologiaDTO;
-import com.pragma.tecnologia.infrastructure.entrypoints.mapper.TecnologiaMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +18,6 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,7 +28,6 @@ public class CapacidadHandlerImpl {
 
     private final CapacidadServicePort capacidadServicePort;
     private final CapacidadMapper capacidadMapper;
-//    private final TecnologiaMapper tecnologiaMapper;
     private final TecnologiaServicePort tecnologiaServicePort;
 
     public Mono<ServerResponse> createCapacidad(ServerRequest request) {

@@ -81,9 +81,6 @@ public class TecnologiaHandlerImpl {
                 });
     }
 
-//    public Mono<ServerResponse> getAllTecnologias(ServerRequest request) {
-//        return ServerResponse.ok().body(tecnologiaServicePort.getAllTecnologias(), TecnologiaDTO.class);
-//    }
 
     public Mono<ServerResponse> getAllTecnologias(ServerRequest request) {
         int page = Integer.parseInt(request.queryParam("page").orElse("0"));
@@ -140,7 +137,6 @@ public class TecnologiaHandlerImpl {
         if (messageId == null || messageId.isBlank()) {
             messageId = "default-message-id";
         }
-        System.out.println("X_MESSAGE_ID: " + messageId);
         return messageId;
     }
 

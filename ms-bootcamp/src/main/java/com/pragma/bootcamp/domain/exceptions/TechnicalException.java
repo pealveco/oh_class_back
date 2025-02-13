@@ -1,6 +1,6 @@
-package com.pragma.tecnologia.domain.exceptions;
+package com.pragma.bootcamp.domain.exceptions;
 
-import com.pragma.tecnologia.domain.enums.TechnicalMessage;
+import com.pragma.bootcamp.domain.enums.TechnicalMessage;
 import lombok.Getter;
 
 @Getter

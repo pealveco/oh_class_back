@@ -1,7 +1,6 @@
 package com.pragma.capacidad.domain.exceptions;
 
 import com.pragma.capacidad.domain.enums.TechnicalMessage;
-import com.pragma.capacidad.domain.exceptions.ProcessorException;
 import lombok.Getter;
 
 @Getter
