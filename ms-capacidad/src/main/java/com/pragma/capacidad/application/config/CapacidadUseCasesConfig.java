@@ -12,6 +12,7 @@ import com.pragma.tecnologia.infrastructure.adapters.persistenceadapter.reposito
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 @RequiredArgsConstructor
@@ -23,6 +24,8 @@ public class CapacidadUseCasesConfig {
     private final TecnologiaRepository tecnologiaRepository;
     private final TecnologiaEntityMapper tecnologiaEntityMapper;
 
+    private final WebClient.Builder webClientBuilder;
+
     @Bean(name = "uniqueCapacidadUseCasesConfig")
     public CapacidadPersistencePort capacidadPersistencePort() {
         return new CapacidadPersistenceAdapter(capacidadRepository, capacidadEntityMapper);
@@ -30,7 +33,7 @@ public class CapacidadUseCasesConfig {
 
     @Bean
     public CapacidadUseCase capacidadUseCase(CapacidadPersistencePort capacidadPersistencePort) {
-        return new CapacidadUseCase(capacidadPersistencePort, capacidadRepository, capacidadEntityMapper);
+        return new CapacidadUseCase(capacidadPersistencePort, capacidadRepository, capacidadEntityMapper, webClientBuilder);
     }
 
     @Bean

@@ -22,7 +22,8 @@ public enum TechnicalMessage {
     TECNOLOGIA_CREATED("201", "Tecnologia created successfully", ""),
     INVALID_TECHNOLOGY_NAME("400", "Invalid Technology Name", "name"),
     NO_DATA_FOUND("404", "No data found", ""),
-    CAPACIDAD_ALREADY_EXISTS("400", "La Capacidad ya existe." ,"" );
+    CAPACIDAD_ALREADY_EXISTS("400", "La Capacidad ya existe." ,"" ),
+    INVALID_TECHNOLOGIES("400", "Invalid Technologies", "tecnologiaIds"),;
 
     private final String code;
     private final String message;
