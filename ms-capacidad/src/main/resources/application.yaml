@@ -86,7 +86,7 @@ resilience4j:
 
 spring:
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/tecnologias
+    url: r2dbc:postgresql://localhost:5432/oh_class_db
     username: user_postgres
     password: 123456
   sql:
