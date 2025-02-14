@@ -64,16 +64,16 @@ resilience4j:
         waitDuration: 2000ms
         enableExponentialBackoff: true
         exponentialBackoffMultiplier: 2.0
-        maxWaitDuration: 10000ms  # Duración máxima del backoff
-        initialInterval: 500ms    # Intervalo inicial para el backoff
+        maxWaitDuration: 10000ms
+        initialInterval: 500ms
     instances:
       emailValidatorRetry:
         maxAttempts: 5
         waitDuration: 1000ms
         enableExponentialBackoff: true
         exponentialBackoffMultiplier: 1.5
-        maxWaitDuration: 10000ms  # Duración máxima del backoff
-        initialInterval: 500ms    # Intervalo inicial para el backoff
+        maxWaitDuration: 10000ms
+        initialInterval: 500ms
   bulkhead:
     configs:
       default:
@@ -96,3 +96,13 @@ spring:
 
 server:
   port: 8080
+  http2:
+    enabled: true
+
+springdoc:
+  api-docs:
+    path: /swagger-doc/v3/api-docs
+  swagger-ui:
+    path: /swagger-doc/swagger-ui.html
+#    operationsSorter: method
+#    defaultModelsExpandDepth: -1

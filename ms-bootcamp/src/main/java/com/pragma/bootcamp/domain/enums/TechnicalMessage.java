@@ -24,7 +24,9 @@ public enum TechnicalMessage {
     NO_DATA_FOUND("404", "No data found", ""),
     CAPACIDAD_ALREADY_EXISTS("400", "La Capacidad ya existe." ,"" ),
     BOOTCAMP_ALREADY_EXISTS("400", "El bootcamp ya existe." ,"" ),
-    BOOTCAMPS_NOT_FOUND("404", "No se encontraron bootcamps", ""),;
+    BOOTCAMPS_NOT_FOUND("404", "No se encontraron bootcamps", ""),
+    INVALID_CAPACIDADES("400", "Invalid Capacidades", "capacidadIds"),
+    GET_ALL_ERROR("500", "Error al obtener todos los bootcamps", ""),;
 
     private final String code;
     private final String message;

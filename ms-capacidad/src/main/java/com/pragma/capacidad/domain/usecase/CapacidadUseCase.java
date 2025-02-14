@@ -32,27 +32,52 @@ public class CapacidadUseCase implements CapacidadServicePort {
             return Mono.error(new IllegalArgumentException("La capacidad debe tener entre 3 y 20 tecnologías"));
         }
 
-        return validateTecnologias(capacidad.tecnologiaIds())
+        return checkTecnologiasExistence(capacidad.tecnologiaIds())
                 .then(capacidadPersistencePort.existByName(capacidad.name())
                         .filter(exists -> !exists)
                         .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.CAPACIDAD_ALREADY_EXISTS)))
-                        .flatMap(exists -> capacidadPersistencePort.save(capacidad)));
+                        .flatMap(exists -> capacidadPersistencePort.save(capacidad))
+                );
     }
 
     @Override
     public Flux<Capacidad> getAllCapacidades(Pageable pageable) {
         return capacidadPersistencePort.findAll(pageable)
-                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.NO_DATA_FOUND)));
+                .switchIfEmpty(Flux.defer(() -> {
+                    log.error("BusinessException: {}", TechnicalMessage.CAPACIDADES_NOT_FOUND.getMessage());
+                    return Flux.empty();
+                }));
     }
 
     @Override
     public Flux<Capacidad> getAllCapacidades() {
-        return capacidadPersistencePort.findAll();
+        return capacidadPersistencePort.findAll()
+                .switchIfEmpty(Flux.defer(() -> {
+                    log.error("BusinessException: {}", TechnicalMessage.CAPACIDADES_NOT_FOUND.getMessage());
+                    return Flux.empty();
+                }));
+    }
+
+    @Override
+    public Mono<Capacidad> getCapacidadById(Long id) {
+        return capacidadPersistencePort.findById(id)
+                .doOnNext(capacidad -> log.info("Capacidad encontrada: {}", capacidad))
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.error("BusinessException: {}", TechnicalMessage.CAPACIDAD_NOT_FOUND.getMessage());
+                    return Mono.empty();
+                }));
     }
 
     // Metodos auxiliares
-    private Mono<Void> validateTecnologias(Set<Long> tecnologiaIds) {
-        WebClient webClient = webClientBuilder.baseUrl("http://localhost:8080").build(); // Cambia la URL según sea necesario
+
+    /**
+     * Valida que todos los IDs de tecnologías proporcionados existan en el servicio externo.
+     *
+     * @param tecnologiaIds Conjunto de IDs de tecnologías a validar.
+     * @return Un `Mono<Void>` que completa si todas las tecnologías existen, o emite un error si alguna no existe.
+     */
+    private Mono<Void> checkTecnologiasExistence(Set<Long> tecnologiaIds) {
+        WebClient webClient = webClientBuilder.baseUrl("http://localhost:8080").build();
 
         return Flux.fromIterable(tecnologiaIds)
                 .flatMap(id -> webClient.get()
@@ -60,7 +85,7 @@ public class CapacidadUseCase implements CapacidadServicePort {
                         .retrieve()
                         .bodyToMono(Tecnologia.class)
                         .doOnNext(tecnologia -> log.info("Tecnología encontrada ***: {}", tecnologia))
-                        .onErrorResume(e -> Mono.empty())) // Maneja el error si la tecnología no existe
+                        .onErrorResume(e -> Mono.empty()))
                 .collectList()
                 .flatMap(tecnologias -> {
                     if (tecnologias.size() != tecnologiaIds.size()) {

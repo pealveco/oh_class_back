@@ -28,13 +28,20 @@ public class TecnologiaUseCase implements TecnologiaServicePort {
     @Override
     public Flux<Tecnologia> getAllTecnologias() {
         return tecnologiaPersistencePort.findAll()
-                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.NO_DATA_FOUND)));
+                .switchIfEmpty(Flux.defer(() -> {
+                    log.error("BusinessException: {}", TechnicalMessage.TECNOLOGIAS_NOT_FOUND.getMessage());
+                    return Flux.empty();
+                }));
     }
 
     @Override
     public Flux<Tecnologia> getAllTecnologias(Pageable pageable) {
         return tecnologiaPersistencePort.findAll(pageable)
-                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.NO_DATA_FOUND)))
+                .doOnNext(tecnologia -> log.info("Tecnología encontrada: {}", tecnologia))
+                .switchIfEmpty(Flux.defer(() -> {
+                    log.error("BusinessException: {}", TechnicalMessage.TECNOLOGIAS_NOT_FOUND.getMessage());
+                    return Flux.empty();
+                }))
                 .onErrorResume(e -> {
                     log.error("Error al obtener todas las tecnologías con paginación", e);
                     return Flux.error(new BusinessException(TechnicalMessage.GET_ALL_ERROR));
@@ -47,7 +54,11 @@ public class TecnologiaUseCase implements TecnologiaServicePort {
 
         return tecnologiaPersistencePort.findById(id)
                 .doOnNext(tecnologia -> log.info("Tecnología encontrada: {}", tecnologia))
-                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.INVALID_MESSAGE_ID)));
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.error("BusinessException: {}", TechnicalMessage.TECNOLOGIA_NOT_FOUND.getMessage());
+                    return Mono.empty();
+                }));
+//                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.INVALID_MESSAGE_ID)));
     }
 
     @Override

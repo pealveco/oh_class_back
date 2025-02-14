@@ -42,7 +42,9 @@ dependencies {
 	testImplementation 'io.projectreactor:reactor-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'jakarta.validation:jakarta.validation-api:3.0.0'
-
+	implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.6.14'
+	implementation 'org.springdoc:springdoc-openapi-webflux-core:1.4.3'
+	implementation 'io.swagger.core.v3:swagger-annotations:2.2.21'
 }
 
 dependencyManagement {

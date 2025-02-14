@@ -23,7 +23,9 @@ public enum TechnicalMessage {
     INVALID_TECHNOLOGY_NAME("400", "Invalid Technology Name", "name"),
     NO_DATA_FOUND("404", "No data found", ""),
     CAPACIDAD_ALREADY_EXISTS("400", "La Capacidad ya existe." ,"" ),
-    GET_ALL_ERROR("500", "Error al obtener todas las tecnologías", "");
+    GET_ALL_ERROR("500", "Error al obtener todas las tecnologías", ""),
+    TECNOLOGIAS_NOT_FOUND("404", "No se encontraron tecnologías", ""),
+    TECNOLOGIA_NOT_FOUND("404", "No se encontró la tecnología", "");
 
     private final String code;
     private final String message;
