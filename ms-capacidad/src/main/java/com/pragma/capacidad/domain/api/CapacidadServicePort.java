@@ -9,4 +9,5 @@ public interface CapacidadServicePort {
     Mono<Capacidad> registerCapacidad(Capacidad capacidad);
     Flux<Capacidad> getAllCapacidades(Pageable pageable);
     Flux<Capacidad> getAllCapacidades();
+    Mono<Capacidad> getCapacidadById(Long id);
 }

@@ -1,10 +1,9 @@
 package com.pragma.bootcamp.infrastructure.entrypoints.dto;
 
-import com.pragma.capacidad.infrastructure.entrypoints.dto.CapacidadDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import java.util.List;
+import java.util.Set;
 
 public record BootcampDTO(
         Long id,
@@ -17,6 +16,6 @@ public record BootcampDTO(
         @Size(max = 90, message = "La descripción no puede superar los 90 caracteres")
         String description,
 
-        @Size(min = 1, max = 4, message = "Debe tener entre 1 y 4 capacidades")
-        List<CapacidadDTO> capacidades
+        @Size(min = 1, max = 4, message = "Debe tener entre 1 y 4 capacidadIds")
+        Set<Long> capacidadIds
 ) {}

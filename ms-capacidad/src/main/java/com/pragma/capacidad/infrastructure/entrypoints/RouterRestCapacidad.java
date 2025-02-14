@@ -15,6 +15,7 @@ public class RouterRestCapacidad {
     public RouterFunction<ServerResponse> routerFunctionCapacidad(CapacidadHandlerImpl capacidadHandler) {
         return route(POST("/capacidad"), capacidadHandler::createCapacidad)
                 .andRoute(GET("/capacidad"), capacidadHandler::getAllCapacidades)
-                .andRoute(GET("/capacidadby"), capacidadHandler::getAllCapacidadesBy);
+                .andRoute(GET("/capacidadby"), capacidadHandler::getAllCapacidadesBy)
+                .andRoute(GET("/capacidad/{id}"), capacidadHandler::getCapacidadById);
     }
 }

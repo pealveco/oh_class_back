@@ -42,6 +42,14 @@ public class CapacidadHandlerImpl {
                 });
     }
 
+    public Mono<ServerResponse> getCapacidadById(ServerRequest request) {
+        Long id = Long.valueOf(request.pathVariable("id"));
+        return capacidadServicePort.getCapacidadById(id)
+                .flatMap(capacidad ->
+                        ServerResponse.ok().bodyValue(capacidadMapper.capacidadToCapacidadDTO(capacidad)))
+                .switchIfEmpty(ServerResponse.notFound().build());
+    }
+
     public Mono<ServerResponse> getAllCapacidades(ServerRequest request) {
         return ServerResponse.ok().body(
             capacidadServicePort.getAllCapacidades()
@@ -95,6 +103,13 @@ public class CapacidadHandlerImpl {
             .flatMap(tecnologiaServicePort::getTecnologiaById);
     }
 
+    /**
+    * Valida el conjunto dado de IDs de tecnología verificando si cada ID corresponde a una Tecnología existente.
+    * Si algún ID no corresponde a una Tecnología existente, se lanza una BusinessException.
+    *
+    * @param tecnologiaIds el conjunto de IDs de tecnología a validar
+    * @return un Mono que se completa si todos los IDs son válidos, o emite un error si algún ID es inválido
+    */
     private Mono<Void> validateTecnologias(Set<Long> tecnologiaIds) {
         return Flux.fromIterable(tecnologiaIds)
                 .flatMap(tecnologiaServicePort::getTecnologiaById)

@@ -41,7 +41,7 @@ dependencies {
 	testImplementation 'io.projectreactor:reactor-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'jakarta.validation:jakarta.validation-api:3.0.0'
-
+	implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.6.15'
 }
 
 dependencyManagement {
