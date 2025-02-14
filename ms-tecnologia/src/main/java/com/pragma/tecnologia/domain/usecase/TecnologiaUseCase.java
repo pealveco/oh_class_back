@@ -34,7 +34,11 @@ public class TecnologiaUseCase implements TecnologiaServicePort {
     @Override
     public Flux<Tecnologia> getAllTecnologias(Pageable pageable) {
         return tecnologiaPersistencePort.findAll(pageable)
-                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.NO_DATA_FOUND)));
+                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.NO_DATA_FOUND)))
+                .onErrorResume(e -> {
+                    log.error("Error al obtener todas las tecnologías con paginación", e);
+                    return Flux.error(new BusinessException(TechnicalMessage.GET_ALL_ERROR));
+                });
     }
 
     @Override
